@@ -51,6 +51,8 @@
 #include <opm/parser/eclipse/EclipseState/Tables/PvdsTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/PvtgTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/PvtoTable.hpp>
+//sogo
+#include <opm/parser/eclipse/EclipseState/Tables/Pvto1Table.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RocktabTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RsvdTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RtempvdTable.hpp>
@@ -99,6 +101,21 @@ PvtoTable::PvtoTable( const DeckKeyword& keyword, size_t tableIdx) :
         m_saturatedSchema.addColumn( ColumnSchema( "BO" , Table::RANDOM , Table::DEFAULT_LINEAR ));
         m_saturatedSchema.addColumn( ColumnSchema( "MU" , Table::RANDOM , Table::DEFAULT_LINEAR ));
 
+        PvtxTable::init(keyword , tableIdx);
+    }
+
+//sogo
+Pvto1Table::Pvto1Table( const DeckKeyword& keyword, size_t tableIdx) :
+    PvtxTable("P") {
+        m_underSaturatedSchema.addColumn( ColumnSchema( "RS1"  , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
+        m_underSaturatedSchema.addColumn( ColumnSchema( "RS2"  , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
+        m_underSaturatedSchema.addColumn( ColumnSchema( "RS3"  , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
+        
+        m_saturatedSchema.addColumn( ColumnSchema( "P"  , Table::RANDOM , Table::DEFAULT_NONE ));
+        m_saturatedSchema.addColumn( ColumnSchema( "RS1" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
+        m_saturatedSchema.addColumn( ColumnSchema( "RS2" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE  ));
+        m_saturatedSchema.addColumn( ColumnSchema( "RS3" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE  ));
+        
         PvtxTable::init(keyword , tableIdx);
     }
 

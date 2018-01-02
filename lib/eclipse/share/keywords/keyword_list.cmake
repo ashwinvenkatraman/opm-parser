@@ -227,6 +227,8 @@ set( keywords
      000_Eclipse100/P/PVTG
      000_Eclipse100/P/PVTNUM
      000_Eclipse100/P/PVTO
+#sogo
+     000_Eclipse100/P/PVTO1
      000_Eclipse100/P/PVTW
      000_Eclipse100/Q/QDRILL
      000_Eclipse100/R/RADFIN4

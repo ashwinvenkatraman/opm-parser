@@ -1,0 +1,6 @@
+{"name" : "PVTO1" , "sections" : ["PROPS"], "num_tables" : {"keyword" : "TABDIMS" , "item" : "NTPVT"},
+        "items" : [
+            {"name":"PRES", "value_type" : "DOUBLE", "dimension":"Pressure" },
+            {"name":"DATA", "value_type":"DOUBLE", "size_type" : "ALL" , "dimension" : ["1","1","1"]}
+         ]
+}
