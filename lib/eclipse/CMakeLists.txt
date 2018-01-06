@@ -99,6 +99,8 @@ set(opmparser_SOURCES Deck/Deck.cpp
                       EclipseState/Tables/ColumnSchema.cpp
                       EclipseState/Tables/JFunc.cpp
                       EclipseState/Tables/PvtxTable.cpp
+#sogo
+		      EclipseState/Tables/Pvtx1Table.cpp
                       EclipseState/Tables/SimpleTable.cpp
                       EclipseState/Tables/TableColumn.cpp
                       EclipseState/Tables/TableContainer.cpp

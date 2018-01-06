@@ -53,6 +53,7 @@
 #include <opm/parser/eclipse/EclipseState/Tables/PvtoTable.hpp>
 //sogo
 #include <opm/parser/eclipse/EclipseState/Tables/Pvto1Table.hpp>
+
 #include <opm/parser/eclipse/EclipseState/Tables/RocktabTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RsvdTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RtempvdTable.hpp>
@@ -106,18 +107,20 @@ PvtoTable::PvtoTable( const DeckKeyword& keyword, size_t tableIdx) :
 
 //sogo
 Pvto1Table::Pvto1Table( const DeckKeyword& keyword, size_t tableIdx) :
-    PvtxTable("P") {
-        m_underSaturatedSchema.addColumn( ColumnSchema( "RS1"  , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
-        m_underSaturatedSchema.addColumn( ColumnSchema( "RS2"  , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
-        m_underSaturatedSchema.addColumn( ColumnSchema( "RS3"  , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
-        
-        m_saturatedSchema.addColumn( ColumnSchema( "P"  , Table::RANDOM , Table::DEFAULT_NONE ));
-        m_saturatedSchema.addColumn( ColumnSchema( "RS1" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
-        m_saturatedSchema.addColumn( ColumnSchema( "RS2" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE  ));
-        m_saturatedSchema.addColumn( ColumnSchema( "RS3" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE  ));
-        
-        PvtxTable::init(keyword , tableIdx);
-    }
+Pvtx1Table("P") {
+    m_rsSchema.addColumn( ColumnSchema( "P"  , Table::RANDOM , Table::DEFAULT_NONE ));
+    m_rsSchema.addColumn( ColumnSchema( "RS1" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
+    m_rsSchema.addColumn( ColumnSchema( "RS2" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE  ));
+    m_rsSchema.addColumn( ColumnSchema( "RS3" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE  ));
+    
+    m_saturatedSchema.addColumn( ColumnSchema( "P" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
+    m_saturatedSchema.addColumn( ColumnSchema( "RS1"  , Table::RANDOM , Table::DEFAULT_NONE ));
+    m_saturatedSchema.addColumn( ColumnSchema( "RS2" , Table::RANDOM , Table::DEFAULT_LINEAR ));
+    m_saturatedSchema.addColumn( ColumnSchema( "RS3" , Table::RANDOM , Table::DEFAULT_LINEAR ));
+    
+    Pvtx1Table::init(keyword , tableIdx);
+    //SimpleTable::init( item );
+}
 
 SpecheatTable::SpecheatTable(const DeckItem& item)
 {

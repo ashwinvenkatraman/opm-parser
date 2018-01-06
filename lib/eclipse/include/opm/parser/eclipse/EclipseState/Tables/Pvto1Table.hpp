@@ -19,13 +19,13 @@
 #ifndef OPM_PARSER_PVTO1_TABLE_HPP
 #define	OPM_PARSER_PVTO1_TABLE_HPP
 
-#include <opm/parser/eclipse/EclipseState/Tables/PvtxTable.hpp>
+#include <opm/parser/eclipse/EclipseState/Tables/Pvtx1Table.hpp>
 
 namespace Opm {
 
     class DeckKeyword;
 
-    class Pvto1Table : public PvtxTable {
+    class Pvto1Table : public Pvtx1Table {
     public:
         Pvto1Table(const DeckKeyword& keyword, size_t tableIdx);
     };
