@@ -47,9 +47,9 @@ inline void loadDeck( const char * deck_file) {
     Opm::ParseContext parseContext;
     Opm::Parser parser;
 
-    std::cout << "Loading deck: " << deck_file << " ..... "; std::cout.flush();
+    std::cout << "Loading deck: " << deck_file << " ..... \n"; std::cout.flush();
     auto deck = parser.parseFile(deck_file, parseContext);
-    std::cout << "parse complete - creating EclipseState .... ";  std::cout.flush();
+    std::cout << "parse complete - creating EclipseState .... \n";  std::cout.flush();
     Opm::EclipseState state( deck, parseContext );
     std::cout << "complete." << std::endl;
 
