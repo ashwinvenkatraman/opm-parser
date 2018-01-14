@@ -1,5 +1,6 @@
 /*
   Copyright 2015 Statoil ASA.
+  Copyright 2018 IRIS
 
   This file is part of the Open Porous Media project (OPM).
 
@@ -28,6 +29,7 @@
 #include <opm/parser/eclipse/Parser/ParserKeywords/P.hpp>
 #include <opm/parser/eclipse/Parser/ParserKeywords/T.hpp>
 #include <opm/parser/eclipse/Parser/ParserKeywords/V.hpp>
+#include <opm/parser/eclipse/Parser/ParserKeywords/A.hpp>
 
 #include <opm/parser/eclipse/EclipseState/Schedule/ScheduleEnums.hpp> // Phase::PhaseEnum
 #include <opm/parser/eclipse/EclipseState/Tables/EnkrvdTable.hpp>
@@ -51,6 +53,8 @@
 #include <opm/parser/eclipse/EclipseState/Tables/PvdsTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RocktabTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RsvdTable.hpp>
+#include <opm/parser/eclipse/EclipseState/Tables/PbvdTable.hpp>
+#include <opm/parser/eclipse/EclipseState/Tables/PdvdTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RtempvdTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RvvdTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/SgcwmisTable.hpp>
@@ -68,12 +72,13 @@
 #include <opm/parser/eclipse/EclipseState/Tables/SwofTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/TableContainer.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/WatvisctTable.hpp>
-
+#include <opm/parser/eclipse/EclipseState/Tables/AqutabTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/JFunc.hpp>
 
 #include <opm/parser/eclipse/EclipseState/Tables/Tabdims.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/Eqldims.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/Regdims.hpp>
+#include <opm/parser/eclipse/EclipseState/Tables/Aqudims.hpp>
 
 #include <opm/parser/eclipse/Units/Units.hpp>
 
@@ -82,6 +87,7 @@ namespace Opm {
     TableManager::TableManager( const Deck& deck )
         :
         m_tabdims( Tabdims(deck)),
+        m_aqudims( Aqudims(deck)),
         hasImptvd (deck.hasKeyword("IMPTVD")),
         hasEnptvd (deck.hasKeyword("ENPTVD")),
         hasEqlnum (deck.hasKeyword("EQLNUM")),
@@ -223,7 +229,10 @@ namespace Opm {
         addTables( "PLYMAX", m_regdims->getNPLMIX());
         addTables( "RSVD", m_eqldims->getNumEquilRegions());
         addTables( "RVVD", m_eqldims->getNumEquilRegions());
+        addTables( "PBVD", m_eqldims->getNumEquilRegions());
+        addTables( "PDVD", m_eqldims->getNumEquilRegions());
 
+        addTables( "AQUTAB", m_aqudims.getNumInfluenceTablesCT());
         {
             size_t numMiscibleTables = ParserKeywords::MISCIBLE::NTMISC::defaultValue;
             if (deck.hasKeyword<ParserKeywords::MISCIBLE>()) {
@@ -280,6 +289,9 @@ namespace Opm {
 
         initSimpleTableContainer<RsvdTable>(deck, "RSVD" , m_eqldims->getNumEquilRegions());
         initSimpleTableContainer<RvvdTable>(deck, "RVVD" , m_eqldims->getNumEquilRegions());
+        initSimpleTableContainer<PbvdTable>(deck, "PBVD" , m_eqldims->getNumEquilRegions());
+        initSimpleTableContainer<PdvdTable>(deck, "PDVD" , m_eqldims->getNumEquilRegions());
+        initSimpleTableContainer<AqutabTable>(deck, "AQUTAB" , m_aqudims.getNumInfluenceTablesCT());
         {
             size_t numEndScaleTables = ParserKeywords::ENDSCALE::NUM_TABLES::defaultValue;
 
@@ -551,6 +563,10 @@ namespace Opm {
     const Eqldims& TableManager::getEqldims() const {
         return *m_eqldims;
     }
+    
+    const Aqudims& TableManager::getAqudims() const {
+        return m_aqudims;
+    }
 
     /*
       const std::vector<SwofTable>& TableManager::getSwofTables() const {
@@ -601,6 +617,14 @@ namespace Opm {
 
     const TableContainer& TableManager::getRvvdTables() const {
         return getTables("RVVD");
+    }
+
+    const TableContainer& TableManager::getPbvdTables() const {
+        return getTables("PBVD");
+    }
+
+    const TableContainer& TableManager::getPdvdTables() const {
+        return getTables("PDVD");
     }
 
     const TableContainer& TableManager::getEnkrvdTables() const {
@@ -684,6 +708,10 @@ namespace Opm {
     const TableContainer& TableManager::getPlyshlogTables() const {
         return getTables("PLYSHLOG");
     }
+    
+    const TableContainer& TableManager::getAqutabTables() const {
+        return getTables("AQUTAB");
+    } 
 
     const std::vector<PvtgTable>& TableManager::getPvtgTables() const {
         return m_pvtgTables;

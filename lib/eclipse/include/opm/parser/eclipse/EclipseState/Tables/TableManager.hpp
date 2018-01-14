@@ -1,5 +1,6 @@
 /*
   Copyright 2015 Statoil ASA.
+  Copyright 2018 IRIS
 
   This file is part of the Open Porous Media project (OPM).
 
@@ -46,14 +47,14 @@
 #include <opm/parser/eclipse/EclipseState/Tables/TableContainer.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/VFPInjTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/VFPProdTable.hpp>
-
+#include <opm/parser/eclipse/EclipseState/Tables/Aqudims.hpp>
 #include <opm/parser/eclipse/Parser/MessageContainer.hpp>
 
 namespace Opm {
 
     class Eqldims;
     class Regdims;
-
+    
     class TableManager {
     public:
         explicit TableManager( const Deck& deck );
@@ -64,6 +65,7 @@ namespace Opm {
 
         const Tabdims& getTabdims() const;
         const Eqldims& getEqldims() const;
+        const Aqudims& getAqudims() const;
 
         /*
           WIll return max{ Tabdims::NTFIP , Regdims::NTFIP }.
@@ -81,6 +83,8 @@ namespace Opm {
         const TableContainer& getSsfnTables() const;
         const TableContainer& getRsvdTables() const;
         const TableContainer& getRvvdTables() const;
+        const TableContainer& getPbvdTables() const;
+        const TableContainer& getPdvdTables() const;
         const TableContainer& getEnkrvdTables() const;
         const TableContainer& getEnptvdTables() const;
         const TableContainer& getImkrvdTables() const;
@@ -101,6 +105,7 @@ namespace Opm {
         const TableContainer& getPlymaxTables() const;
         const TableContainer& getPlyrockTables() const;
         const TableContainer& getPlyshlogTables() const;
+        const TableContainer& getAqutabTables() const;
 
         const TableContainer& getSorwmisTables() const;
         const TableContainer& getSgcwmisTables() const;
@@ -309,10 +314,12 @@ namespace Opm {
         Tabdims m_tabdims;
         std::shared_ptr<Regdims> m_regdims;
         std::shared_ptr<Eqldims> m_eqldims;
+        Aqudims m_aqudims;
 
         const bool hasImptvd;// if deck has keyword IMPTVD
         const bool hasEnptvd;// if deck has keyword ENPTVD
         const bool hasEqlnum;// if deck has keyword EQLNUM
+
 
         const JFunc m_jfunc;
 
