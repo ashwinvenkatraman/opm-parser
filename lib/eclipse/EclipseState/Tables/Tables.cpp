@@ -57,6 +57,8 @@
 #include <opm/parser/eclipse/EclipseState/Tables/RsvdTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RtempvdTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/RvvdTable.hpp>
+#include <opm/parser/eclipse/EclipseState/Tables/PbvdTable.hpp>
+#include <opm/parser/eclipse/EclipseState/Tables/PdvdTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/SgcwmisTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/SgfnTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/SgofTable.hpp>
@@ -72,6 +74,7 @@
 #include <opm/parser/eclipse/EclipseState/Tables/SwofTable.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/TableContainer.hpp>
 #include <opm/parser/eclipse/EclipseState/Tables/WatvisctTable.hpp>
+#include <opm/parser/eclipse/EclipseState/Tables/AqutabTable.hpp>
 
 namespace Opm {
 
@@ -815,6 +818,50 @@ const TableColumn& RvvdTable::getDepthColumn() const {
 }
 
 const TableColumn& RvvdTable::getRvColumn() const {
+    return SimpleTable::getColumn(1);
+}
+
+PbvdTable::PbvdTable( const DeckItem& item ) {
+    m_schema.addColumn( ColumnSchema( "DEPTH" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
+    m_schema.addColumn( ColumnSchema( "PBUB" , Table::RANDOM , Table::DEFAULT_NONE ));
+
+    SimpleTable::init(item);
+}
+
+const TableColumn& PbvdTable::getDepthColumn() const {
+    return SimpleTable::getColumn(0);
+}
+
+const TableColumn& PbvdTable::getPbubColumn() const {
+    return SimpleTable::getColumn(1);
+}
+
+PdvdTable::PdvdTable( const DeckItem& item ) {
+    m_schema.addColumn( ColumnSchema( "DEPTH" , Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ));
+    m_schema.addColumn( ColumnSchema( "PDEW" , Table::RANDOM , Table::DEFAULT_NONE ));
+
+    SimpleTable::init(item);
+}
+
+const TableColumn& PdvdTable::getDepthColumn() const {
+    return SimpleTable::getColumn(0);
+}
+
+const TableColumn& PdvdTable::getPdewColumn() const {
+    return SimpleTable::getColumn(1);
+}
+
+AqutabTable::AqutabTable( const DeckItem& item ) {
+    m_schema.addColumn( ColumnSchema( "TD" ,  Table::STRICTLY_INCREASING , Table::DEFAULT_NONE ) );
+    m_schema.addColumn( ColumnSchema( "PD"    ,  Table::RANDOM , Table::DEFAULT_LINEAR ) );
+    SimpleTable::init(item);
+}
+
+const TableColumn& AqutabTable::getTimeColumn() const {
+    return SimpleTable::getColumn(0); 
+}
+
+const TableColumn& AqutabTable::getPressureColumn() const {
     return SimpleTable::getColumn(1);
 }
 
