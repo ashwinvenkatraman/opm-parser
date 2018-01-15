@@ -26,6 +26,8 @@
 #include <opm/parser/eclipse/EclipseState/EclipseState.hpp>
 #include <opm/parser/eclipse/EclipseState/checkDeck.hpp>
 #include <opm/parser/eclipse/EclipseState/Grid/GridDims.hpp>
+#include <opm/parser/eclipse/EclipseState/Schedule/Schedule.hpp>
+#include <opm/parser/eclipse/EclipseState/SummaryConfig/SummaryConfig.hpp>
 
 
 inline void dumpMessages( const Opm::MessageContainer& messageContainer) {
@@ -51,16 +53,20 @@ inline void loadDeck( const char * deck_file) {
     auto deck = parser.parseFile(deck_file, parseContext);
     std::cout << "parse complete - creating EclipseState .... \n";  std::cout.flush();
     Opm::EclipseState state( deck, parseContext );
-    std::cout << "complete." << std::endl;
+    Opm::Runspec runspec( deck );
+    const auto& phases = runspec.phases();
+    std::shared_ptr<Opm::Schedule> schedule = std::make_shared<Opm::Schedule>(deck, state.getInputGrid(), state.get3DProperties(), phases, parseContext);
+    std::shared_ptr<Opm::SummaryConfig> summary_config = std::make_shared<Opm::SummaryConfig>(deck, *schedule, state.getTableManager(), parseContext);
 
     Opm::checkDeck(deck, parser);
+    dumpMessages( deck.getMessageContainer() );
     Opm::GridDims gridDims(deck);
     auto Nx = gridDims.getNX();
     auto Ny = gridDims.getNY();
     auto Nz = gridDims.getNZ();
     std::cout << "Nx: " << Nx << " Ny: " << Ny << " Nz: " << Nz <<  std::endl;
 
-    dumpMessages( deck.getMessageContainer() );
+    std::cout << "complete." << std::endl;
 }
 
 
