@@ -92,9 +92,14 @@ namespace Opm {
             throw std::invalid_argument("input index above valid range");
     }
 
+    static std::string to_string(size_t i, size_t j, size_t k) {
+        return "i,j,k:" + std::to_string(i) + "," + std::to_string(j) + "," + std::to_string(k);
+
+    }
+
     void GridDims::assertIJK(size_t i, size_t j, size_t k) const {
         if (i >= getNX() || j >= getNY() || k >= getNZ())
-            throw std::invalid_argument("input index above valid range");
+            throw std::invalid_argument("input index above valid range." +  to_string(i, j, k));
     }
 
     GridDims::GridDims() :
